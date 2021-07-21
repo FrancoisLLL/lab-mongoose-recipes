@@ -20,7 +20,65 @@ mongoose
     return Recipe.deleteMany()
   })
   .then(() => {
-    // Run your code here, after you have insured that the connection was made
+    const recipe = {
+      title: "Boeuf lok lak",
+      level: "Amateur Chef",
+      ingredients: ["rice", "tomato", "onion", "beef"],
+      cuisine: "asian",
+      dishType: "main_course",
+      duration: 60,
+      creator: "Francois",
+      created: new Date()
+    };
+    // CREATE
+    Recipe.create([recipe])
+      .then((createdDocument) => {
+        console.log("Create Success !!");
+        console.log(createdDocument);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    // Recipe.insertMany(recipe)
+    // .then((createdDocument) => {
+    //   console.log("Success !!");
+    //   console.log(createdDocument);
+    // })
+    // .catch((error) => {
+    //   console.log(error);
+    // });
+    Recipe.create(data)
+      .then((createdDocument) => {
+        console.log("Insert many Success !!");
+        console.log(createdDocument);
+        Recipe.findOneAndUpdate({
+            title: "Rigatoni alla Genovese"
+          }, {
+            duration: 100
+          }, {
+            useFindAndModify: false
+          })
+          .then(() => {
+            console.log("Update success")
+
+            Recipe.deleteOne({
+                title: "Carrot Cake"
+              })
+              .then(() => {
+                console.log("Delete Success")
+                mongoose.connection.close()
+                  .then(() => console.log ("connection closed"))
+                  .catch((error)=> console.log(error))
+              })
+              .catch(error => console.log(error))
+          })
+          .catch(error => console.log(error))
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   })
   .catch(error => {
     console.error('Error connecting to the database', error);
